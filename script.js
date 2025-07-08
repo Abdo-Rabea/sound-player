@@ -6,6 +6,7 @@ const audio = document.getElementById("audio");
 const currentTime = document.getElementById("current-time");
 const totalTime = document.getElementById("total-time");
 const progress = document.getElementById("progress");
+const progressContainer = document.getElementById("progress-container");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 const playBtn = document.getElementById("play");
@@ -56,12 +57,18 @@ function toggleAudioState() {
   }
 }
 
-function setTotalTimeDuration() {
-  const duration = Math.round(audio.duration);
+// *helper functions
+// return the formatedTime MM:SS from given seconds
+function getFormatedTime(seconds) {
+  const duration = Math.round(seconds);
   const minutes = Math.floor(duration / 60);
-  const seconds = duration - minutes * 60;
-  const printedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-  totalTime.innerText = `${minutes}:${printedSeconds}`;
+  const secs = duration - minutes * 60;
+  const printedSeconds = secs < 10 ? `0${secs}` : `${secs}`;
+  return `${minutes}:${printedSeconds}`;
+}
+
+function setTotalTimeDuration() {
+  totalTime.innerText = getFormatedTime(audio.duration);
 }
 
 // chenge the player to given sura (img, name, reciter, audio)
@@ -76,18 +83,40 @@ function loadAudio(suraObj) {
 function playNextAudio(direction) {
   const n = allSuras.length;
   suraIndex = (suraIndex + direction + n) % n;
-
+  // startPlayingAudio();
   loadAudio(allSuras[suraIndex]);
   // start playing Audio as it will stop playing by default so ui will be different ||
   startPlayingAudio();
 }
 
+// progress functionalities
+function updateProgressTo(time) {
+  // update progress bar
+  const duration = audio.duration;
+  const progressStyle = Math.ceil((time / duration) * 100);
+  progress.style.width = `${progressStyle}%`;
+
+  // update currentTime text
+  currentTime.innerText = getFormatedTime(time);
+}
+
+// *progress Container
+setInterval(() => updateProgressTo(audio.currentTime), 300);
+
 // Event Listeners
 playBtn.addEventListener("click", toggleAudioState);
 // change duration on loadMetaData
 audio.addEventListener("loadedmetadata", setTotalTimeDuration);
+audio.addEventListener("ended", () => playNextAudio(1));
 nextBtn.addEventListener("click", () => playNextAudio(1));
 prevBtn.addEventListener("click", () => playNextAudio(-1));
+progressContainer.addEventListener("click", function (e) {
+  const time = (e.offsetX / progressContainer.offsetWidth) * audio.duration;
+
+  audio.currentTime = time;
+  console.log(e.offsetX, progressContainer.offsetWidth, time);
+  updateProgressTo(time);
+});
 // onLoad
 // load audio
 loadAudio(allSuras[suraIndex]);
