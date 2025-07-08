@@ -99,6 +99,9 @@ h3 {
   top: -25px;
   display: flex;
   justify-content: space-between;
+  pointer-events: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Controls */

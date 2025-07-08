@@ -114,7 +114,6 @@ progressContainer.addEventListener("click", function (e) {
   const time = (e.offsetX / progressContainer.offsetWidth) * audio.duration;
 
   audio.currentTime = time;
-  console.log(e.offsetX, progressContainer.offsetWidth, time);
   updateProgressTo(time);
 });
 // onLoad
