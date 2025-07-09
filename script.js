@@ -68,14 +68,14 @@ function getFormatedTime(seconds) {
 }
 
 function setTotalTimeDuration() {
-  totalTime.innerText = getFormatedTime(audio.duration);
+  totalTime.textContent = getFormatedTime(audio.duration);
 }
 
 // chenge the player to given sura (img, name, reciter, audio)
 function loadAudio(suraObj) {
   image.style.backgroundImage = `url('img/${suraObj.sura}.png')`;
-  sura.innerText = suraObj.sura;
-  reciterName.innerText = suraObj.reciter;
+  sura.textContent = suraObj.sura;
+  reciterName.textContent = suraObj.reciter;
   audio.src = `audio/${suraObj.sura}.mp3`;
   //* duration will be setted automaticlly after sura meta is loaded
 }
@@ -97,22 +97,24 @@ function updateProgressTo(time) {
   progress.style.width = `${progressStyle}%`;
 
   // update currentTime text
-  currentTime.innerText = getFormatedTime(time);
+  currentTime.textContent = getFormatedTime(time);
 }
 
 // *progress Container
-setInterval(() => updateProgressTo(audio.currentTime), 300);
+// setInterval(() => updateProgressTo(audio.currentTime), 300);
 
 // Event Listeners
 playBtn.addEventListener("click", toggleAudioState);
 // change duration on loadMetaData
-audio.addEventListener("loadedmetadata", setTotalTimeDuration);
+audio.addEventListener("loadedmetadata", setTotalTimeDuration); // he didn't use this but he do it inside progress calc. yay :)
 audio.addEventListener("ended", () => playNextAudio(1));
+audio.addEventListener("timeupdate", (e) => {
+  updateProgressTo(e.target.currentTime);
+});
 nextBtn.addEventListener("click", () => playNextAudio(1));
 prevBtn.addEventListener("click", () => playNextAudio(-1));
 progressContainer.addEventListener("click", function (e) {
-  const time = (e.offsetX / progressContainer.offsetWidth) * audio.duration;
-
+  const time = (e.offsetX / this.offsetWidth) * audio.duration;
   audio.currentTime = time;
   updateProgressTo(time);
 });
