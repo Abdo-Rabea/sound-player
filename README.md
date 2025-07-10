@@ -4,14 +4,14 @@ A responsive and interactive web-based sound player that allows users to play, p
 
 ---
 
-## 🌟 Features
+## Features
 
 - Play / Pause audio
 - Next / Previous surah
 - Interactive progress bar with current and total time
 -  Dynamic surah image and reciter name
 -  Auto-play next surah when current ends
-- 💡 Responsive and accessible design
+-  Responsive and accessible design
 
 ---
 ## Getting Started
